@@ -1,14 +1,18 @@
 package sistemaadm;
 
-import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 
 public class ventana extends JFrame {
@@ -21,6 +25,12 @@ public class ventana extends JFrame {
     cliente clientes[]= new cliente[100];
     int controlCliente = 0;
     JPanel panelControlClientes = new JPanel();
+    
+    public ventana(){
+        objetos();
+        crearAdmin();
+        crearClientes();
+    }
 
     public void crearAdmin() {
         usuSistema[0] = new usuario();
@@ -33,12 +43,21 @@ public class ventana extends JFrame {
         usuSistema[1].nombre = "Juan";
         usuSistema[1].contra = "12";
     }
-
-    public ventana() {
-        objetos();
-        crearAdmin();
-
+    
+    public void crearClientes(){
+        clientes[0] = new cliente();
+        clientes[0].nombre = "cliente 1";
+        clientes[0].edad = 22;
+        clientes[0].genero = 'M';
+        clientes[0].nit = 150;
+        
+        clientes[1] = new cliente();
+        clientes[1].nombre = "cliente 2";
+        clientes[1].edad = 25;
+        clientes[1].genero = 'F';
+        clientes[1].nit = 220;        
     }
+
 
     public void objetos() {
         
@@ -136,6 +155,7 @@ public class ventana extends JFrame {
             }
         
         };
+        btnAdminClientes.addActionListener(administrarClientes);
         
         JButton btnAdminProductos = new JButton("Administración de productos");
         btnAdminProductos.setBounds(150, 80, 250, 25);
@@ -255,13 +275,48 @@ public class ventana extends JFrame {
     }
     
     public void panelControlCli(){
-        PopupMenu panelControlClientes = null;
+        
         this.getContentPane().add(panelControlClientes);
-        panelControlClientes.setLabel(null);
-        this.setSize(600, 500);
+        panelControlClientes.setLayout(null);
+        this.setSize(750, 600);
         this.setTitle("Administración de clientes");
         panelControl.setVisible(false);
-                
+        
+        DefaultTableModel datosTabla = new DefaultTableModel();
+        datosTabla.addColumn("Nombre");
+        datosTabla.addColumn("Edad");
+        datosTabla.addColumn("Genero");
+        datosTabla.addColumn("Nit");
+        
+        for (int i = 0; i < 100; i++ ){
+            if (clientes[i] != null) {
+                String fila [] = {clientes[i].nombre, String.valueOf(clientes[i].edad), String.valueOf(clientes[i].genero), String.valueOf(clientes[i].nit)};
+                datosTabla.addRow(fila);
+            }
+        }              
+        
+        String fila [] = {"Juan", "15", "M", "500"};
+        datosTabla.addRow(fila);
+        
+        JTable tablaClientes = new JTable(datosTabla);
+        JScrollPane barraTablaClientes = new JScrollPane(tablaClientes);
+        barraTablaClientes.setBounds(10, 10, 300, 150 );
+        panelControlClientes.add(barraTablaClientes);
+        
+        JButton btnCargarArchivo = new JButton("Buscar archivo CSV");
+        btnCargarArchivo.setBounds(300, 10, 200, 25);
+        panelControlClientes.add(btnCargarArchivo);
+        ActionListener buscarArchivo = new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+               File archivoSeleccionado;
+               JFileChooser ventanaSeleccion = new JFileChooser();
+               ventanaSeleccion.showOpenDialog(null);
+               archivoSeleccionado = ventanaSeleccion.getSelectedFile();
+            }
+        };
+        btnCargarArchivo.addActionListener(buscarArchivo);
+        
     }
 
 }
