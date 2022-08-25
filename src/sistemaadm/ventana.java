@@ -20,13 +20,13 @@ import javax.swing.table.DefaultTableModel;
 public class ventana extends JFrame {
 
     usuario usuSistema[] = new usuario[10];
-    JPanel panelInicioSesion = new JPanel();
-    JPanel panelControl = new JPanel();
-    JPanel panelCrearUsuario = new JPanel();
+    JPanel panelInicioSesion;
+    JPanel panelControl;
+    JPanel panelCrearUsuario;
     int control = 2;
     cliente clientes[] = new cliente[100];
     int controlCliente = 0;
-    JPanel panelControlClientes = new JPanel();
+    JPanel panelControlClientes;
     int controlClientes = 2;
 
     public ventana() {
@@ -62,6 +62,7 @@ public class ventana extends JFrame {
     }
 
     public void objetos() {
+        panelInicioSesion = new JPanel();
 
         this.getContentPane().add(panelInicioSesion);
         panelInicioSesion.setLayout(null);
@@ -140,6 +141,7 @@ public class ventana extends JFrame {
     }
 
     public void panelControl() {
+        panelControl = new JPanel();
         this.getContentPane().add(panelControl);
         panelControl.setLayout(null);
         this.setSize(700, 600);
@@ -169,6 +171,7 @@ public class ventana extends JFrame {
     }
 
     public void CrearUsuario() {
+        panelCrearUsuario = new JPanel();
         this.getContentPane().add(panelCrearUsuario);
         panelCrearUsuario.setLayout(null);
         this.setSize(500, 450);
@@ -277,7 +280,7 @@ public class ventana extends JFrame {
     }
 
     public void panelControlCli() {
-
+        panelControlClientes = new JPanel();
         this.getContentPane().add(panelControlClientes);
         panelControlClientes.setLayout(null);
         this.setSize(750, 600);
@@ -317,6 +320,8 @@ public class ventana extends JFrame {
                 archivoSeleccionado = ventanaSeleccion.getSelectedFile();
                 System.out.println("La ubicación del archivo es " + archivoSeleccionado.getPath());
                 leerArchivoCSV(archivoSeleccionado.getPath());
+                panelControlClientes.setVisible(false);
+                panelControlCli();
             }
         };
         btnCargarArchivo.addActionListener(buscarArchivo);
