@@ -16,6 +16,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 public class ventana extends JFrame {
 
@@ -283,7 +289,7 @@ public class ventana extends JFrame {
         panelControlClientes = new JPanel();
         this.getContentPane().add(panelControlClientes);
         panelControlClientes.setLayout(null);
-        this.setSize(750, 600);
+        this.setSize(950, 500);
         this.setTitle("Administración de clientes");
         panelControl.setVisible(false);
 
@@ -308,8 +314,31 @@ public class ventana extends JFrame {
         barraTablaClientes.setBounds(10, 10, 300, 150);
         panelControlClientes.add(barraTablaClientes);
 
+        DefaultPieDataset datos = new DefaultPieDataset();
+        datos.setValue("Masculino", totalHombres());
+        datos.setValue("Femenino", totalMujeres());
+
+        JFreeChart graficoCircular = ChartFactory.createPieChart("Generos en el sistema", datos);
+        ChartPanel panelCircular = new ChartPanel(graficoCircular);
+        panelCircular.setBounds(10, 120, 300, 300);
+        panelControlClientes.add(panelCircular);
+
+        //System.out.println("Total de 18 a 30 " + rango18a30());
+        //System.out.println("Total de 31 a 45 " + rango31a45());
+        //System.out.println("Total de 45 o mas " + rango45mas());
+        
+        DefaultCategoryDataset datos2 = new DefaultCategoryDataset();
+        datos2.addValue(rango18a30(), "18-30", "Edad");
+        datos2.addValue(rango31a45(), "31-45", "Edad");
+        datos2.addValue(rango45mas(), "4Mayor a 45", "Edad");
+        JFreeChart graficoColumnas = ChartFactory.createBarChart("Rango de edades", "Edad", "Escala", datos2, PlotOrientation.VERTICAL, true, true, false);
+        ChartPanel panelColumnas = new ChartPanel(graficoColumnas);
+        panelColumnas.setBounds(450, 120, 300, 300);
+        panelControlClientes.add(panelColumnas);
+        
+        
         JButton btnCargarArchivo = new JButton("Buscar archivo CSV");
-        btnCargarArchivo.setBounds(300, 10, 200, 25);
+        btnCargarArchivo.setBounds(350, 10, 200, 25);
         panelControlClientes.add(btnCargarArchivo);
         ActionListener buscarArchivo = new ActionListener() {
             @Override
@@ -325,7 +354,77 @@ public class ventana extends JFrame {
             }
         };
         btnCargarArchivo.addActionListener(buscarArchivo);
+        
+        JButton btnReporte = new JButton("Crear reporte HTML");
+        btnReporte.setBounds(650, 10, 200, 25);
+        panelControlClientes.add(btnReporte);
+        ActionListener crearHTML = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                System.out.println("SIII");
+            }
+        };
+        btnReporte.addActionListener(crearHTML);
+    }
 
+    public int totalHombres() {
+        int total = 0;
+        for (int i = 0; i < 100; i++) {
+            if (clientes[i] != null) {
+                if (clientes[i].genero == 'M') {
+                    total++;
+                }
+            }
+        }
+        return total;
+    }
+
+    public int totalMujeres() {
+        int total = 0;
+        for (int i = 0; i < 100; i++) {
+            if (clientes[i] != null) {
+                if (clientes[i].genero == 'F') {
+                    total++;
+                }
+            }
+        }
+        return total;
+    }
+
+    public int rango18a30() {
+        int total = 0;
+        for (int i = 0; i < 100; i++) {
+            if (clientes[i] != null) {
+                if (clientes[i].edad >= 18 && clientes[i].edad <= 30) {
+                    total++;
+                }
+            }
+        }
+        return total;
+    }
+
+    public int rango31a45() {
+        int total = 0;
+        for (int i = 0; i < 100; i++) {
+            if (clientes[i] != null) {
+                if (clientes[i].edad >= 31 && clientes[i].edad <= 45) {
+                    total++;
+                }
+            }
+        }
+        return total;
+    }
+    
+    public int rango45mas() {
+        int total = 0;
+        for (int i = 0; i < 100; i++) {
+            if (clientes[i] != null) {
+                if (clientes[i].edad >45){
+                    total++;
+                }
+            }
+        }
+        return total;
     }
 
     public void leerArchivoCSV(String ruta) {
@@ -336,8 +435,7 @@ public class ventana extends JFrame {
                 lineaLeida = archivoTemporal.readLine();
                 if (lineaLeida != null) {
                     String datosSeparados[] = lineaLeida.split(",");
-                    
-                    
+
                     int posicion = 0;
                     if (controlClientes < 100) {
                         for (int i = 0; i < 99; i++) {
@@ -354,7 +452,7 @@ public class ventana extends JFrame {
                         clientes[posicion].nit = Integer.parseInt(datosSeparados[3]);
                         controlClientes++;
                         JOptionPane.showMessageDialog(null, "Cliente registrado exitosamente, total de clientes " + controlClientes);
-                        
+
                     } else {
                         JOptionPane.showMessageDialog(null, "No se puede registrar más clientes");
                     }
