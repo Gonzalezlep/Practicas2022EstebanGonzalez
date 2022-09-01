@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -361,10 +362,48 @@ public class ventana extends JFrame {
         ActionListener crearHTML = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                System.out.println("SIII");
+                crearReporte();
             }
         };
-        btnReporte.addActionListener(crearHTML);
+        btnReporte.addActionListener(crearHTML );
+    }
+    
+    public void crearReporte(){
+        try{
+            PrintWriter escribir = new PrintWriter("reportes/index.html","UTF-8");
+            escribir.println("<!doctype html>");
+            escribir.println("<hmtl>");
+            escribir.println("<head>");
+            escribir.println("<title>Reporte del sistema</title>");
+            escribir.println("</head>");
+            escribir.println("<body>");
+            escribir.println("<h1>Listado de clientes en el sistema</h1>");
+            escribir.println("<br>");
+            
+            escribir.println("<table border = 1>");
+            escribir.println("<tr>");
+            escribir.println("<td>NIT</td> <td>Nombre</td> <td>Edad</td> <td>Genero</td>");
+            escribir.println("</tr>");
+            
+            for(int i = 0; i<99; i++){
+                if(clientes[i] != null){
+                    escribir.println("<tr>");
+                    escribir.println("<td>" + clientes[i].nit + "</td><td>" + clientes[i].nombre + "</td><td>" + clientes[i].edad + "</td><td>" + clientes[i].genero + "</td>");
+                    escribir.println("</tr>");
+                }
+            }
+                      
+            escribir.println("</table>");
+            
+            
+            escribir.println("</body>");
+            escribir.println("</hmtl>");
+            
+            escribir.close();
+            JOptionPane.showMessageDialog(null, "Reporte creado con éxito, este se encuentra en la carpeta Reportes");
+        }catch(IOException error){
+            JOptionPane.showMessageDialog(null, "No se pudo crear el reporte");
+        }
     }
 
     public int totalHombres() {
